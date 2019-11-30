@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Header from './views/Header';
+import Home from './views/Home';
+import Login from './views/Login'
+import { AuthContext } from './utils/context';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [authTokens, setAuthTokens] = useState(localStorage.getItem('token'));
+
+  const setTokens = (data) => {
+    localStorage.setItem('token', JSON.stringify(data));
+    setAuthTokens(data);
+  };
+
+  const removeToken = () => {
+    localStorage.removeItem('token');
+    setAuthTokens();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens, removeToken }}>
+      <div className="App">
+        <Router>
+          <div>
+            <Header />
+            <Switch>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+              <Route exact path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </div>
+        </Router>
+      </div>
+    </AuthContext.Provider>
   );
-}
+};
 
 export default App;
