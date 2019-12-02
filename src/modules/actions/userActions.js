@@ -73,11 +73,10 @@ function loadUsingDifferentGet(dispatch, url) {
 }
 
 export function editTask(data) {
-  const { id, token, text, status } = data;
-  console.log(status);
+  const { id, text, status } = data;
   const formData = new FormData();
 
-  formData.append('token', token);
+  formData.append('token', localStorage.getItem('token'));
 
   if (text) {
     formData.append('text', text);
